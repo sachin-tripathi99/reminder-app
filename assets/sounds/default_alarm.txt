@@ -1,0 +1,3 @@
+# Default Alarm Sound Placeholder
+# In a production app, add actual .mp3 or .wav alarm sound files here
+# Example: default_alarm.mp3, water_drop.mp3, etc.
