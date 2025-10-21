@@ -1,0 +1,3 @@
+# Silent audio file placeholder
+# In production, this should be a very short silent .mp3 file
+# This is used when the device is in silent mode to trigger vibration only
