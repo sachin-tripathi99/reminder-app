@@ -57,8 +57,23 @@ class DatabaseService {
   }
 
   Future<int> createReminder(Reminder reminder) async {
-    final db = await database;
-    return await db.insert('reminders', reminder.toMap());
+    try {
+      print('DB Service: Getting database instance');
+      final db = await database;
+      print('DB Service: Database instance obtained');
+      
+      final reminderMap = reminder.toMap();
+      print('DB Service: Reminder converted to map: $reminderMap');
+      
+      final id = await db.insert('reminders', reminderMap);
+      print('DB Service: Reminder inserted with ID: $id');
+      
+      return id;
+    } catch (e, stackTrace) {
+      print('DB Service: Error creating reminder: $e');
+      print('DB Service: Stack trace: $stackTrace');
+      rethrow;
+    }
   }
 
   Future<Reminder?> getReminder(int id) async {

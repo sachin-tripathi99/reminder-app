@@ -97,17 +97,22 @@ class _AddEditReminderScreenState extends State<AddEditReminderScreen> {
   }
 
   Future<void> _saveReminder() async {
+    print('Save reminder called');
+    
     if (!_formKey.currentState!.validate()) {
+      print('Form validation failed');
       return;
     }
 
     if (_selectedDays.isEmpty) {
+      print('No days selected');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select at least one day')),
       );
       return;
     }
 
+    print('Creating reminder object');
     final reminder = Reminder(
       id: widget.reminder?.id,
       name: _nameController.text.trim(),
@@ -123,18 +128,32 @@ class _AddEditReminderScreenState extends State<AddEditReminderScreen> {
       maxSnoozes: widget.reminder?.maxSnoozes ?? 3,
     );
 
+    print('Reminder object created: ${reminder.name}');
+    
     try {
       final provider = Provider.of<ReminderProvider>(context, listen: false);
+      print('Provider obtained');
+      
       if (widget.reminder != null) {
+        print('Updating existing reminder');
         await provider.updateReminder(reminder);
       } else {
+        print('Adding new reminder');
         await provider.addReminder(reminder);
       }
 
+      print('Reminder saved successfully');
+      
       if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Reminder saved successfully')),
+        );
         Navigator.pop(context, true);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('Error saving reminder: $e');
+      print('Stack trace: $stackTrace');
+      
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error saving reminder: $e')),

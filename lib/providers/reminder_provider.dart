@@ -32,17 +32,24 @@ class ReminderProvider with ChangeNotifier {
 
   Future<void> addReminder(Reminder reminder) async {
     try {
+      print('Provider: Creating reminder in database');
       final id = await _dbService.createReminder(reminder);
+      print('Provider: Reminder created with ID: $id');
+      
       final newReminder = reminder.copyWith(id: id);
       _reminders.insert(0, newReminder);
       
       if (newReminder.isEnabled) {
+        print('Provider: Scheduling alarms for reminder');
         await _alarmService.scheduleReminderAlarms(newReminder);
+        print('Provider: Alarms scheduled');
       }
       
       notifyListeners();
-    } catch (e) {
+      print('Provider: Add reminder completed');
+    } catch (e, stackTrace) {
       print('Error adding reminder: $e');
+      print('Stack trace: $stackTrace');
       rethrow;
     }
   }
